@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasturi Gogarkar — PM Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060912;
+  --bg2: #0c1220;
+  --bg3: #111827;
+  --teal: #00d4aa;
+  --teal2: #00b4d8;
+  --gold: #f5c842;
+  --coral: #ff6b6b;
+  --text: #e4e8f0;
+  --muted: #7a8399;
+  --border: rgba(0,212,170,0.15);
+  --glow: rgba(0,212,170,0.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',sans-serif;overflow-x:hidden;line-height:1.6}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px}
+
+/* CANVAS BG */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.4;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 4rem;display:flex;justify-content:space-between;align-items:center;transition:all 0.4s ease}
+nav.scrolled{background:rgba(6,9,18,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--teal);letter-spacing:0.05em}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s;font-family:'DM Mono',monospace}
+.nav-links a:hover{color:var(--teal)}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;z-index:1;overflow:hidden}
+.hero-inner{max-width:900px;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.3);color:var(--teal);font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;padding:0.4rem 1rem;border-radius:100px;margin-bottom:2rem;animation:fadeDown 0.8s ease both}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+.hero-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:800;line-height:0.95;letter-spacing:-0.03em;margin-bottom:1rem;animation:fadeUp 0.9s 0.2s ease both}
+.hero-name span{background:linear-gradient(135deg,var(--teal),var(--teal2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:500;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;animation:fadeUp 0.9s 0.4s ease both}
+.hero-desc{font-size:1.1rem;color:#9aa3b5;max-width:600px;margin:0 auto 2.5rem;line-height:1.7;animation:fadeUp 0.9s 0.6s ease both}
+.hero-cta{display:flex;gap:1rem;justify-content:center;animation:fadeUp 0.9s 0.8s ease both;flex-wrap:wrap}
+.btn-primary{padding:0.85rem 2rem;background:var(--teal);color:var(--bg);font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.05em;border:none;border-radius:4px;cursor:pointer;text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:white;opacity:0;transition:opacity 0.3s}
+.btn-primary:hover::after{opacity:0.15}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,170,0.4)}
+.btn-outline{padding:0.85rem 2rem;background:transparent;color:var(--teal);font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.05em;border:1px solid rgba(0,212,170,0.4);border-radius:4px;cursor:pointer;text-decoration:none;transition:all 0.3s}
+.btn-outline:hover{background:rgba(0,212,170,0.08);transform:translateY(-2px)}
+
+/* HERO STATS */
+.hero-stats{display:flex;gap:3rem;justify-content:center;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border);animation:fadeUp 0.9s 1s ease both;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--teal)}
+.stat-label{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:'DM Mono',monospace}
+
+/* SCROLL INDICATOR */
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;animation:fadeUp 1s 1.2s ease both;opacity:0.5}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--teal),transparent);animation:scrollAnim 2s infinite}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.scroll-text{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+
+/* SECTIONS */
+section{position:relative;z-index:1;padding:7rem 2rem}
+.container{max-width:1100px;margin:0 auto}
+.section-tag{font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.section-tag::before{content:'';display:block;width:30px;height:1px;background:var(--teal)}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem}
+.section-title em{font-style:normal;color:var(--teal)}
+.section-sub{font-size:1.05rem;color:#9aa3b5;max-width:600px;line-height:1.7}
+
+/* REVEAL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.delay-1{transition-delay:0.1s}
+.delay-2{transition-delay:0.2s}
+.delay-3{transition-delay:0.3s}
+.delay-4{transition-delay:0.4s}
+.delay-5{transition-delay:0.5s}
+
+/* ABOUT */
+#about{background:var(--bg2)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:4rem}
+.about-visual{position:relative}
+.about-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden}
+.about-card::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(0,212,170,0.05),transparent 60%)}
+.avatar-ring{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--bg);margin-bottom:1.5rem}
+.about-name-card{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.3rem}
+.about-role-card{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--teal);letter-spacing:0.1em}
+.divider{width:100%;height:1px;background:var(--border);margin:1.5rem 0}
+.info-row{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.8rem}
+.info-label{color:var(--muted);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.05em}
+.info-val{color:var(--text);font-weight:500}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem}
+.tag{background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);color:var(--teal);font-size:0.75rem;font-family:'DM Mono',monospace;letter-spacing:0.05em;padding:0.3rem 0.8rem;border-radius:3px}
+.about-text p{color:#9aa3b5;line-height:1.8;margin-bottom:1rem;font-size:1rem}
+.highlight-box{background:linear-gradient(135deg,rgba(0,212,170,0.08),rgba(0,180,216,0.05));border-left:3px solid var(--teal);padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin-top:1.5rem}
+.highlight-box p{color:var(--text);font-style:italic;margin:0;font-size:0.95rem}
+
+/* PROBLEM */
+#problem{background:var(--bg)}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.problem-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden;transition:transform 0.3s,border-color 0.3s}
+.problem-card:hover{transform:translateY(-6px);border-color:rgba(0,212,170,0.4)}
+.problem-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal2));transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
+.problem-card:hover::after{transform:scaleX(1)}
+.problem-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:rgba(0,212,170,0.2);line-height:1;margin-bottom:1rem}
+.problem-stat{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--coral);margin-bottom:0.5rem}
+.problem-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:0.8rem}
+.problem-desc{font-size:0.88rem;color:var(--muted);line-height:1.6}
+
+/* DECAY CHART */
+.decay-section{margin-top:5rem;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:3rem}
+.decay-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:2rem;text-align:center}
+.decay-chart{position:relative;height:200px;margin-bottom:2rem}
+.decay-svg{width:100%;height:100%}
+.decay-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.05em}
+
+/* RESEARCH */
+#research{background:var(--bg2)}
+.research-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem}
+.research-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:2rem}
+.rc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:1.5rem;color:var(--teal)}
+.bar-chart{display:flex;flex-direction:column;gap:1rem}
+.bar-row{display:flex;flex-direction:column;gap:0.4rem}
+.bar-label{display:flex;justify-content:space-between;font-size:0.8rem}
+.bar-label span:first-child{color:var(--text)}
+.bar-label span:last-child{color:var(--teal);font-family:'DM Mono',monospace;font-weight:500}
+.bar-track{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--teal2));width:0;transition:width 1.2s cubic-bezier(0.16,1,0.3,1)}
+
+/* QUOTE CARDS */
+.quotes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:3rem}
+.quote-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.8rem;position:relative}
+.quote-icon{font-size:2.5rem;line-height:1;color:rgba(0,212,170,0.3);font-family:'Syne',sans-serif;font-weight:800;margin-bottom:1rem}
+.quote-text{font-size:0.92rem;line-height:1.7;color:var(--text);font-style:italic;margin-bottom:1rem}
+.quote-author{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--teal);letter-spacing:0.05em}
+
+/* SOLUTIONS */
+#solutions{background:var(--bg)}
+.rice-table{width:100%;border-collapse:collapse;margin-top:3rem;border-radius:12px;overflow:hidden}
+.rice-table th{background:rgba(0,212,170,0.1);color:var(--teal);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:1rem 1.2rem;text-align:left;border-bottom:1px solid var(--border)}
+.rice-table td{padding:1rem 1.2rem;font-size:0.9rem;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s}
+.rice-table tr:hover td{background:rgba(0,212,170,0.04)}
+.rice-table tr.winner td{background:rgba(0,212,170,0.06)}
+.rice-table tr.winner td:first-child{border-left:3px solid var(--teal)}
+.score-badge{display:inline-block;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--bg);font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;padding:0.2rem 0.7rem;border-radius:4px}
+.winner-badge{background:linear-gradient(135deg,var(--gold),#e8a800);color:var(--bg)}
+
+.solutions-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:4rem}
+.sol-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden;transition:all 0.3s}
+.sol-card.featured{border-color:rgba(0,212,170,0.4);background:linear-gradient(135deg,rgba(0,212,170,0.06),rgba(0,180,216,0.03))}
+.sol-card:hover{transform:translateY(-4px)}
+.sol-icon{font-size:2rem;margin-bottom:1rem}
+.sol-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:0.5rem}
+.sol-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:3px;margin-bottom:1rem}
+.sol-tag.featured{background:rgba(0,212,170,0.15);color:var(--teal);border:1px solid rgba(0,212,170,0.3)}
+.sol-tag.secondary{background:rgba(245,200,66,0.1);color:var(--gold);border:1px solid rgba(245,200,66,0.3)}
+.sol-desc{font-size:0.88rem;color:var(--muted);line-height:1.6}
+.sol-features{list-style:none;margin-top:1rem;display:flex;flex-direction:column;gap:0.5rem}
+.sol-features li{font-size:0.84rem;color:#9aa3b5;display:flex;align-items:center;gap:0.5rem}
+.sol-features li::before{content:'→';color:var(--teal);font-size:0.8rem;flex-shrink:0}
+
+/* LOOPS */
+#loops{background:var(--bg2)}
+.loops-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem}
+.loop-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:2rem;transition:all 0.3s}
+.loop-card:hover{border-color:rgba(0,212,170,0.3);transform:translateY(-4px)}
+.loop-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.loop-num{width:36px;height:36px;background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--bg);flex-shrink:0}
+.loop-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+.loop-freq{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--teal);letter-spacing:0.08em}
+.loop-steps{display:flex;flex-direction:column;gap:0.6rem}
+.loop-step{display:flex;gap:0.8rem;font-size:0.84rem}
+.step-label{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--teal);letter-spacing:0.05em;min-width:70px;flex-shrink:0;padding-top:0.15rem}
+.step-val{color:#9aa3b5;line-height:1.5}
+.loop-impact{margin-top:1rem;padding:0.8rem;background:rgba(0,212,170,0.06);border-radius:6px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--teal);letter-spacing:0.05em}
+
+/* GTM */
+#gtm{background:var(--bg)}
+.timeline{position:relative;margin-top:4rem;padding-left:3rem}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--teal),transparent)}
+.tl-item{position:relative;margin-bottom:3rem}
+.tl-dot{position:absolute;left:-3rem;top:4px;width:24px;height:24px;background:var(--bg);border:2px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.tl-dot-inner{width:8px;height:8px;background:var(--teal);border-radius:50%}
+.tl-phase{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem}
+.tl-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:0.5rem}
+.tl-period{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--gold);margin-bottom:0.8rem}
+.tl-details{display:flex;flex-direction:column;gap:0.4rem}
+.tl-row{display:flex;gap:0.8rem;font-size:0.85rem}
+.tl-key{color:var(--muted);min-width:80px;font-size:0.8rem}
+.tl-value{color:var(--text)}
+
+/* METRICS */
+#metrics{background:var(--bg2)}
+.north-star{background:linear-gradient(135deg,rgba(0,212,170,0.1),rgba(0,180,216,0.05));border:1px solid rgba(0,212,170,0.3);border-radius:16px;padding:3rem;text-align:center;margin-bottom:4rem;position:relative;overflow:hidden}
+.north-star::before{content:'★';position:absolute;top:-20px;right:-10px;font-size:15rem;color:rgba(0,212,170,0.03);line-height:1;pointer-events:none}
+.ns-label{font-family:'DM Mono',monospace;font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem}
+.ns-metric{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:800;margin-bottom:1rem}
+.ns-metric span{color:var(--teal)}
+.ns-arrow{font-size:1.5rem;color:var(--teal);margin:0 0.5rem}
+.ns-desc{color:var(--muted);font-size:0.92rem}
+.okr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.okr-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:2rem}
+.okr-obj{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--teal);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.5rem}
+.okr-obj::before{content:'O';background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--bg);font-size:0.75rem;font-weight:800;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kr-list{list-style:none;display:flex;flex-direction:column;gap:0.7rem}
+.kr-list li{font-size:0.85rem;color:#9aa3b5;display:flex;gap:0.6rem;line-height:1.5}
+.kr-label{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--teal);letter-spacing:0.05em;flex-shrink:0;padding-top:0.15rem}
+
+/* PROTOTYPE */
+#prototype{background:var(--bg)}
+.proto-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem}
+.proto-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;text-decoration:none;color:inherit;display:block}
+.proto-card:hover{transform:translateY(-6px);border-color:rgba(0,212,170,0.4);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+.proto-preview{height:180px;background:linear-gradient(135deg,rgba(0,212,170,0.1),rgba(0,180,216,0.05));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.proto-preview-icon{font-size:4rem;opacity:0.5}
+.proto-glow{position:absolute;width:150px;height:150px;background:radial-gradient(circle,rgba(0,212,170,0.2),transparent 70%);animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translate(-20px,-20px)}50%{transform:translate(20px,20px)}}
+.proto-body{padding:1.8rem}
+.proto-type{font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+.proto-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:0.8rem}
+.proto-desc{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:1.2rem}
+.proto-link{display:inline-flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--teal);letter-spacing:0.05em}
+.proto-link::after{content:'↗';font-size:0.9rem}
+
+/* RISKS */
+#risks{background:var(--bg2)}
+.risks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.risk-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:all 0.3s}
+.risk-card:hover{border-color:rgba(0,212,170,0.3);transform:translateY(-3px)}
+.risk-level{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+.risk-level.high{color:var(--coral)}
+.risk-level.med{color:var(--gold)}
+.risk-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;margin-bottom:0.6rem}
+.risk-desc{font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:0.8rem}
+.risk-mitigation{font-size:0.8rem;color:#9aa3b5;padding:0.6rem;background:rgba(0,212,170,0.05);border-left:2px solid var(--teal);border-radius:0 4px 4px 0}
+.risk-mit-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--teal);letter-spacing:0.08em;margin-bottom:0.2rem}
+
+/* CONTACT */
+#contact{background:var(--bg);text-align:center;padding:8rem 2rem}
+.contact-inner{max-width:600px;margin:0 auto}
+.contact-inner .section-title{font-size:clamp(2.5rem,6vw,4.5rem)}
+.contact-inner .section-sub{margin:1rem auto 3rem}
+.contact-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.contact-link{display:flex;align-items:center;gap:0.6rem;padding:0.8rem 1.5rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:0.88rem;transition:all 0.3s;font-family:'DM Mono',monospace}
+.contact-link:hover{border-color:rgba(0,212,170,0.4);color:var(--teal);background:rgba(0,212,170,0.06);transform:translateY(-2px)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);z-index:1;position:relative}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .about-grid,.research-grid,.solutions-cards,.loops-grid,.okr-grid,.proto-grid,.quotes-grid{grid-template-columns:1fr}
+  .problem-grid,.risks-grid{grid-template-columns:1fr 1fr}
+  .timeline{padding-left:2rem}
+}
+@media(max-width:500px){
+  .problem-grid,.risks-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">KG</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#solutions">Solutions</a></li>
+    <li><a href="#metrics">Metrics</a></li>
+    <li><a href="#prototype">Prototype</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span></span>
+      Product Management Case Study · Cohort-22
+    </div>
+    <h1 class="hero-name">Kasturi<br><span>Gogarkar</span></h1>
+    <p class="hero-title">Product Manager · Eye Care · Lenskart</p>
+    <p class="hero-desc">Transforming Lenskart from a purchase-led eyewear platform into a <strong>habit-forming eye-care companion</strong> — using research, strategy, and design thinking.</p>
+    <div class="hero-cta">
+      <a href="#solutions" class="btn-primary">View the Solution</a>
+      <a href="#research" class="btn-outline">Read the Research</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num" data-count="70">0</div><div>%</div>
+        <div class="stat-label">Disengage in 30 days</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="48">0</div>
+        <div class="stat-label">Survey Respondents</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="25">0</div><div>→50%</div>
+        <div class="stat-label">Target MAU Growth</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="562">0</div>
+        <div class="stat-label">Top RICE Score</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal-left">
+        <div class="section-tag">About</div>
+        <h2 class="section-title">The PM Behind<br>the <em>Vision</em></h2>
+        <div class="about-text">
+          <p>A product thinker from Cohort-22 with a sharp eye for user behavior gaps and data-driven decision making. This case study tackles one of the most challenging PM problems: building engagement in a <strong>low-frequency purchase category</strong>.</p>
+          <p>The research involved 48 survey respondents, 10+ qualitative interviews, competitor analysis across 4 brands, and industry reports from Statista, RedSeer, and Deloitte.</p>
+          <div class="highlight-box">
+            <p>"How do you make people open an app for a product they only need once every 2 years? You don't sell eyewear — you sell eye health."</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="about-card">
+          <div class="avatar-ring">KG</div>
+          <div class="about-name-card">Kasturi Gogarkar</div>
+          <div class="about-role-card">Product Manager · Cohort-22</div>
+          <div class="divider"></div>
+          <div class="info-row">
+            <span class="info-label">Company</span>
+            <span class="info-val">Lenskart (Case Study)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Focus Area</span>
+            <span class="info-val">Engagement & Retention</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Research Size</span>
+            <span class="info-val">48 respondents + 10 interviews</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Timeline</span>
+            <span class="info-val">6–12 months GTM</span>
+          </div>
+          <div class="divider"></div>
+          <div class="skill-tags">
+            <span class="tag">User Research</span>
+            <span class="tag">RICE Framework</span>
+            <span class="tag">GTM Strategy</span>
+            <span class="tag">OKRs</span>
+            <span class="tag">Growth Loops</span>
+            <span class="tag">Prototyping</span>
+            <span class="tag">Figma</span>
+            <span class="tag">Competitive Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">The Problem</div>
+      <h2 class="section-title">A Platform Stuck in<br><em>Purchase Mode</em></h2>
+      <p class="section-sub">Lenskart had 2,000+ stores and strong brand recall — but once users got their glasses, they vanished. Here's the breakdown.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal delay-1">
+        <div class="problem-num">01</div>
+        <div class="problem-stat">70%</div>
+        <div class="problem-title">Disengage within 30 days</div>
+        <div class="problem-desc">After delivery, users had no reason to return. The app's only value was checkout — and that was done.</div>
+      </div>
+      <div class="problem-card reveal delay-2">
+        <div class="problem-num">02</div>
+        <div class="problem-stat">80%+</div>
+        <div class="problem-title">LTV from single purchase</div>
+        <div class="problem-desc">Most customer lifetime value was captured in one transaction. Repeat engagement was an afterthought.</div>
+      </div>
+      <div class="problem-card reveal delay-3">
+        <div class="problem-num">03</div>
+        <div class="problem-stat">25%</div>
+        <div class="problem-title">Non-Transactional MAU</div>
+        <div class="problem-desc">Only 1 in 4 monthly active users engaged with Lenskart outside of purchase or checkout flows.</div>
+      </div>
+    </div>
+
+    <div class="decay-section reveal">
+      <div class="decay-title">Customer Engagement Decay Curve</div>
+      <div class="decay-chart">
+        <svg class="decay-svg" viewBox="0 0 800 180" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="decayGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(0,212,170,0.3)"/>
+              <stop offset="100%" stop-color="rgba(0,212,170,0)"/>
+            </linearGradient>
+          </defs>
+          <!-- Area fill -->
+          <path id="decayArea" d="M 0 20 C 60 20, 100 40, 150 90 C 200 130, 300 155, 400 165 C 500 170, 600 172, 800 175 L 800 180 L 0 180 Z" fill="url(#decayGrad)" opacity="0"/>
+          <!-- Line -->
+          <path id="decayLine" d="M 0 20 C 60 20, 100 40, 150 90 C 200 130, 300 155, 400 165 C 500 170, 600 172, 800 175" fill="none" stroke="url(#lineGrad)" stroke-width="3" stroke-dasharray="1200" stroke-dashoffset="1200"/>
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#00d4aa"/>
+              <stop offset="100%" stop-color="#00b4d8"/>
+            </linearGradient>
+          </defs>
+          <!-- Dots -->
+          <circle cx="0" cy="20" r="5" fill="#00d4aa" opacity="0" id="d1"/>
+          <circle cx="150" cy="90" r="5" fill="#f5c842" opacity="0" id="d2"/>
+          <circle cx="400" cy="165" r="5" fill="#ff6b6b" opacity="0" id="d3"/>
+          <circle cx="800" cy="175" r="5" fill="#ff6b6b" opacity="0" id="d4"/>
+          <!-- Labels -->
+          <text x="5" y="15" fill="#00d4aa" font-family="DM Mono" font-size="11" opacity="0" id="l1">100%</text>
+          <text x="130" y="85" fill="#f5c842" font-family="DM Mono" font-size="11" opacity="0" id="l2">~50%</text>
+          <text x="380" y="160" fill="#ff6b6b" font-family="DM Mono" font-size="11" opacity="0" id="l3">~25%</text>
+          <text x="750" y="170" fill="#ff6b6b" font-family="DM Mono" font-size="11" opacity="0" id="l4">~20%</text>
+        </svg>
+      </div>
+      <div class="decay-labels">
+        <span>Purchase</span><span>30 Days</span><span>3 Months</span><span>6 Months</span><span>12 Months</span><span>24 Months</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">User Research</div>
+      <h2 class="section-title">48 Users.<br><em>5 Hard Truths.</em></h2>
+      <p class="section-sub">Mixed-method research — survey + interviews + secondary sources — across Tier 1, 2, and 3 cities. Here's what the data said.</p>
+    </div>
+    <div class="research-grid">
+      <div class="research-card reveal delay-1">
+        <div class="rc-title">How often do users get eye tests?</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label"><span>Every 2–3 years</span><span>41%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="41"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Once a year</span><span>32%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="32"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Only when problems occur</span><span>22%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="22"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Never</span><span>5%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="5"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="research-card reveal delay-2">
+        <div class="rc-title">Where do users buy eyewear?</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label"><span>Local optical stores</span><span>52%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="52"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Online platforms</span><span>27%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="27"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Brand retail stores</span><span>21%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="21"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="research-card reveal delay-3">
+        <div class="rc-title">Barriers to buying online</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label"><span>Frame fit uncertainty</span><span>47%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="47"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Incorrect power fear</span><span>25%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="25"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Lens quality concerns</span><span>15%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="15"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Return process</span><span>13%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="13"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="research-card reveal delay-4">
+        <div class="rc-title">User behavior split</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label"><span>Reactive (care when needed)</span><span>75%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="75" style="background:linear-gradient(90deg,#ff6b6b,#ff8e53)"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Proactive (regular care)</span><span>25%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="25"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Test annually</span><span>32%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="32" style="background:linear-gradient(90deg,#f5c842,#e8a800)"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Unaware of Rx expiry</span><span>68%</span></div>
+            <div class="bar-track"><div class="bar-fill" data-width="68" style="background:linear-gradient(90deg,#ff6b6b,#ff8e53)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Quotes -->
+    <div class="quotes-grid">
+      <div class="quote-card reveal delay-1">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">I usually buy glasses from a nearby optical store because I can try different frames and get suggestions from the shopkeeper.</div>
+        <div class="quote-author">— 26-year-old user, Pune · Offline Trust Barrier</div>
+      </div>
+      <div class="quote-card reveal delay-2">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">I don't remember when my last eye test was. I usually go when I start getting headaches or feel eye strain.</div>
+        <div class="quote-author">— 31-year-old user, Nagpur · Reactive Behavior</div>
+      </div>
+      <div class="quote-card reveal delay-3">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">I like browsing frames online, but I feel more comfortable purchasing them after trying them in person.</div>
+        <div class="quote-author">— 24-year-old user, Indore · Discovery ≠ Purchase</div>
+      </div>
+      <div class="quote-card reveal delay-4">
+        <div class="quote-icon">"</div>
+        <div class="quote-text">If someone could check my eye power at home, I would definitely consider ordering glasses online.</div>
+        <div class="quote-author">— 35-year-old user, Nashik · Accessibility = Conversion</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="solutions">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Solution Prioritization</div>
+      <h2 class="section-title">Five Bets.<br><em>Two Winners.</em></h2>
+      <p class="section-sub">Every solution was scored using the RICE framework. Here's how the numbers played out.</p>
+    </div>
+
+    <table class="rice-table reveal">
+      <thead>
+        <tr>
+          <th>Solution</th>
+          <th>Reach</th>
+          <th>Impact</th>
+          <th>Confidence</th>
+          <th>Effort</th>
+          <th>RICE Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="winner">
+          <td><strong>Loyalty & Rewards</strong></td>
+          <td>75%</td><td>3</td><td>5</td><td>2</td>
+          <td><span class="score-badge winner-badge">562.5 ★</span></td>
+        </tr>
+        <tr class="winner">
+          <td><strong>Eye Health Companion</strong></td>
+          <td>80%</td><td>3</td><td>4</td><td>3</td>
+          <td><span class="score-badge">320</span></td>
+        </tr>
+        <tr>
+          <td>Habit-Forming Loops</td>
+          <td>60%</td><td>5</td><td>4</td><td>4</td>
+          <td><span class="score-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border)">300</span></td>
+        </tr>
+        <tr>
+          <td>Preventive Care Platform</td>
+          <td>70%</td><td>4</td><td>4</td><td>4</td>
+          <td><span class="score-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border)">280</span></td>
+        </tr>
+        <tr>
+          <td>Social & Community</td>
+          <td>50%</td><td>3</td><td>3</td><td>3</td>
+          <td><span class="score-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border)">150</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="solutions-cards">
+      <div class="sol-card featured reveal delay-1">
+        <div class="sol-icon">👁️</div>
+        <div class="sol-title">Eye Health Companion</div>
+        <div class="sol-tag featured">RICE: 320 · Core Feature</div>
+        <div class="sol-desc">Personalized eye health tracking built into the app, transforming passive users into proactive health managers.</div>
+        <ul class="sol-features">
+          <li>Prescription storage + expiry alerts</li>
+          <li>Daily 20-20-20 rule challenges</li>
+          <li>Weekly eye health insights</li>
+          <li>Eye checkup booking integration</li>
+          <li>Personalized lens recommendations</li>
+        </ul>
+      </div>
+      <div class="sol-card featured reveal delay-2">
+        <div class="sol-icon">⭐</div>
+        <div class="sol-title">Loyalty & Rewards</div>
+        <div class="sol-tag secondary">RICE: 562.5 · #1 Priority</div>
+        <div class="sol-desc">A tiered rewards program that incentivizes non-transactional engagement — earning points just by caring for your eyes.</div>
+        <ul class="sol-features">
+          <li>Points for purchases, reviews & referrals</li>
+          <li>Daily check-in bonus points</li>
+          <li>Bronze → Silver → Gold → Platinum tiers</li>
+          <li>Redemption for discounts + free lens upgrades</li>
+          <li>Exclusive member benefits & early access</li>
+        </ul>
+      </div>
+      <div class="sol-card reveal delay-3">
+        <div class="sol-icon">🏥</div>
+        <div class="sol-title">Preventive Care Platform</div>
+        <div class="sol-tag" style="background:rgba(0,180,216,0.1);color:var(--teal2);border:1px solid rgba(0,180,216,0.3)">RICE: 280 · Phase 2</div>
+        <div class="sol-desc">Home eye test booking and preventive care reminders — making Lenskart a holistic health partner, not just a store.</div>
+        <ul class="sol-features">
+          <li>Home eye test booking system</li>
+          <li>Preventive care recommendations</li>
+          <li>Eye health assessments</li>
+        </ul>
+      </div>
+      <div class="sol-card reveal delay-4">
+        <div class="sol-icon">🎮</div>
+        <div class="sol-title">Habit-Forming Loops</div>
+        <div class="sol-tag" style="background:rgba(0,180,216,0.1);color:var(--teal2);border:1px solid rgba(0,180,216,0.3)">RICE: 300 · Phase 2</div>
+        <div class="sol-desc">Gamified daily challenges, streaks, and community features that create intrinsic motivation for regular app visits.</div>
+        <ul class="sol-features">
+          <li>Streak counters + achievement badges</li>
+          <li>Community eye care tips</li>
+          <li>Social sharing with friend referral bonus</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOOPS -->
+<section id="loops">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Growth Loops</div>
+      <h2 class="section-title">5 Loops That<br><em>Keep Users Coming Back</em></h2>
+      <p class="section-sub">Each loop is a self-reinforcing cycle — action leads to reward leads to habit leads to return.</p>
+    </div>
+    <div class="loops-grid">
+      <div class="loop-card reveal delay-1">
+        <div class="loop-header">
+          <div class="loop-num">1</div>
+          <div>
+            <div class="loop-title">Daily Eye Care Challenge</div>
+            <div class="loop-freq">DAILY · 60% DAU target</div>
+          </div>
+        </div>
+        <div class="loop-steps">
+          <div class="loop-step"><span class="step-label">Trigger</span><span class="step-val">Morning notification at optimal time</span></div>
+          <div class="loop-step"><span class="step-label">Action</span><span class="step-val">Complete 20-20-20 rule challenge (2 min)</span></div>
+          <div class="loop-step"><span class="step-label">Reward</span><span class="step-val">10 points + streak counter increments</span></div>
+          <div class="loop-step"><span class="step-label">Outcome</span><span class="step-val">User returns next day to maintain streak</span></div>
+        </div>
+        <div class="loop-impact">↑ Expected: 60% daily active users</div>
+      </div>
+      <div class="loop-card reveal delay-2">
+        <div class="loop-header">
+          <div class="loop-num">2</div>
+          <div>
+            <div class="loop-title">Weekly Eye Health Insights</div>
+            <div class="loop-freq">WEEKLY · 70% WAU target</div>
+          </div>
+        </div>
+        <div class="loop-steps">
+          <div class="loop-step"><span class="step-label">Trigger</span><span class="step-val">Sunday evening summary notification</span></div>
+          <div class="loop-step"><span class="step-label">Action</span><span class="step-val">View personalized eye health insights</span></div>
+          <div class="loop-step"><span class="step-label">Reward</span><span class="step-val">25 points + unlock new tips</span></div>
+          <div class="loop-step"><span class="step-label">Outcome</span><span class="step-val">User engages with health content</span></div>
+        </div>
+        <div class="loop-impact">↑ Expected: 70% weekly active users</div>
+      </div>
+      <div class="loop-card reveal delay-3">
+        <div class="loop-header">
+          <div class="loop-num">3</div>
+          <div>
+            <div class="loop-title">Social Sharing Loop</div>
+            <div class="loop-freq">VARIABLE · 20% MoM growth</div>
+          </div>
+        </div>
+        <div class="loop-steps">
+          <div class="loop-step"><span class="step-label">Trigger</span><span class="step-val">User earns milestone or completes challenge</span></div>
+          <div class="loop-step"><span class="step-label">Action</span><span class="step-val">Share achievement with friends</span></div>
+          <div class="loop-step"><span class="step-label">Reward</span><span class="step-val">Bonus points + friend referral reward</span></div>
+          <div class="loop-step"><span class="step-label">Outcome</span><span class="step-val">Viral growth — friend joins app</span></div>
+        </div>
+        <div class="loop-impact">↑ Expected: 20% month-over-month growth</div>
+      </div>
+      <div class="loop-card reveal delay-4">
+        <div class="loop-header">
+          <div class="loop-num">4</div>
+          <div>
+            <div class="loop-title">Loyalty Redemption Loop</div>
+            <div class="loop-freq">MONTHLY · 15% repeat purchases</div>
+          </div>
+        </div>
+        <div class="loop-steps">
+          <div class="loop-step"><span class="step-label">Trigger</span><span class="step-val">User accumulates 100+ points</span></div>
+          <div class="loop-step"><span class="step-label">Action</span><span class="step-val">Redeem for discount or exclusive product</span></div>
+          <div class="loop-step"><span class="step-label">Reward</span><span class="step-val">Discount code or exclusive access</span></div>
+          <div class="loop-step"><span class="step-label">Outcome</span><span class="step-val">Drives repeat purchase + re-engagement</span></div>
+        </div>
+        <div class="loop-impact">↑ Expected: 15% increase in repeat purchases</div>
+      </div>
+      <div class="loop-card reveal delay-5" style="grid-column:1/-1;max-width:500px;margin:0 auto;width:100%">
+        <div class="loop-header">
+          <div class="loop-num">5</div>
+          <div>
+            <div class="loop-title">Prescription Renewal Loop</div>
+            <div class="loop-freq">ANNUALLY · 40% checkup rate</div>
+          </div>
+        </div>
+        <div class="loop-steps">
+          <div class="loop-step"><span class="step-label">Trigger</span><span class="step-val">Prescription expiry alert (3 months before)</span></div>
+          <div class="loop-step"><span class="step-label">Action</span><span class="step-val">Book eye checkup or schedule home test</span></div>
+          <div class="loop-step"><span class="step-label">Reward</span><span class="step-val">Bonus points + exclusive renewal discount</span></div>
+          <div class="loop-step"><span class="step-label">Outcome</span><span class="step-val">Drives preventive care + purchase conversion</span></div>
+        </div>
+        <div class="loop-impact">↑ Expected: 40% increase in eye checkup frequency</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GTM -->
+<section id="gtm">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Go-To-Market Strategy</div>
+      <h2 class="section-title">From 25% to 50%<br><em>in 12 Months</em></h2>
+      <p class="section-sub">A phased rollout designed to build evidence before scale — starting with power users and expanding to full launch.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item reveal delay-1">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-phase">Phase 1</div>
+        <div class="tl-title">Soft Launch — Power Users</div>
+        <div class="tl-period">Month 1–2</div>
+        <div class="tl-details">
+          <div class="tl-row"><span class="tl-key">Target</span><span class="tl-value">Top 10% most engaged users (recent purchasers)</span></div>
+          <div class="tl-row"><span class="tl-key">Channel</span><span class="tl-value">In-app notification</span></div>
+          <div class="tl-row"><span class="tl-key">Message</span><span class="tl-value">"Unlock your personalized eye health journey"</span></div>
+          <div class="tl-row"><span class="tl-key">Goal</span><span class="tl-value">30% adoption among power users</span></div>
+        </div>
+      </div>
+      <div class="tl-item reveal delay-2">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-phase">Phase 2</div>
+        <div class="tl-title">Gradual Rollout — Active Prescriptions</div>
+        <div class="tl-period">Month 3–4</div>
+        <div class="tl-details">
+          <div class="tl-row"><span class="tl-key">Target</span><span class="tl-value">All users with active prescriptions on file</span></div>
+          <div class="tl-row"><span class="tl-key">Channel</span><span class="tl-value">Email, push notifications, in-app prompts</span></div>
+          <div class="tl-row"><span class="tl-key">Message</span><span class="tl-value">"Get personalized eye care tips and earn rewards"</span></div>
+          <div class="tl-row"><span class="tl-key">Goal</span><span class="tl-value">40% adoption across user base</span></div>
+        </div>
+      </div>
+      <div class="tl-item reveal delay-3">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-phase">Phase 3</div>
+        <div class="tl-title">Full Public Launch</div>
+        <div class="tl-period">Month 5–6</div>
+        <div class="tl-details">
+          <div class="tl-row"><span class="tl-key">Target</span><span class="tl-value">All app users</span></div>
+          <div class="tl-row"><span class="tl-key">Channel</span><span class="tl-value">App store optimization, social media, partnerships</span></div>
+          <div class="tl-row"><span class="tl-key">Message</span><span class="tl-value">"Your personal eye health companion"</span></div>
+          <div class="tl-row"><span class="tl-key">Goal</span><span class="tl-value">50%+ adoption</span></div>
+        </div>
+      </div>
+      <div class="tl-item reveal delay-4">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-phase">Phase 4</div>
+        <div class="tl-title">Sustained Engagement — Habit Formation</div>
+        <div class="tl-period">Month 7–12</div>
+        <div class="tl-details">
+          <div class="tl-row"><span class="tl-key">Focus</span><span class="tl-value">Retention loops + community growth</span></div>
+          <div class="tl-row"><span class="tl-key">Channel</span><span class="tl-value">Personalized notifications, community features</span></div>
+          <div class="tl-row"><span class="tl-key">Message</span><span class="tl-value">Evolving based on user segments</span></div>
+          <div class="tl-row"><span class="tl-key">Goal</span><span class="tl-value">45–50% Non-Transactional MAU ✓</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">North Star & OKRs</div>
+      <h2 class="section-title">What <em>Success</em><br>Looks Like</h2>
+    </div>
+    <div class="north-star reveal">
+      <div class="ns-label">North Star Metric</div>
+      <div class="ns-metric">Non-Transactional MAU: <span>25%</span><span class="ns-arrow">→</span><span>45–50%</span></div>
+      <div class="ns-desc">Users who engage with the app outside of purchase or checkout flows — measured monthly. This directly captures sustained habit formation.</div>
+    </div>
+    <div class="okr-grid">
+      <div class="okr-card reveal delay-1">
+        <div class="okr-obj">Build Habit-Forming Engagement</div>
+        <ul class="kr-list">
+          <li><span class="kr-label">KR1</span>Achieve 60% daily active users in Eye Health Companion</li>
+          <li><span class="kr-label">KR2</span>Maintain 70% weekly engagement rate</li>
+          <li><span class="kr-label">KR3</span>Increase avg session duration to 5+ minutes</li>
+        </ul>
+      </div>
+      <div class="okr-card reveal delay-2">
+        <div class="okr-obj">Increase Non-Transactional MAU</div>
+        <ul class="kr-list">
+          <li><span class="kr-label">KR1</span>Grow Non-Transactional MAU from 25% → 45–50%</li>
+          <li><span class="kr-label">KR2</span>Improve Day 30 retention from 30% → 50%</li>
+          <li><span class="kr-label">KR3</span>Achieve 40% feature adoption in first 3 months</li>
+        </ul>
+      </div>
+      <div class="okr-card reveal delay-3">
+        <div class="okr-obj">Drive Preventive Care Engagement</div>
+        <ul class="kr-list">
+          <li><span class="kr-label">KR1</span>Increase eye checkup bookings by 40%</li>
+          <li><span class="kr-label">KR2</span>Achieve 35% prescription renewal rate</li>
+          <li><span class="kr-label">KR3</span>Build 50K+ community tips contributions</li>
+        </ul>
+      </div>
+      <div class="okr-card reveal delay-4">
+        <div class="okr-obj">Increase Customer LTV</div>
+        <ul class="kr-list">
+          <li><span class="kr-label">KR1</span>Increase average customer LTV by 30–40%</li>
+          <li><span class="kr-label">KR2</span>Achieve 15% increase in repeat purchases</li>
+          <li><span class="kr-label">KR3</span>Reduce churn rate by 25%</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOTYPE -->
+<section id="prototype">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Live Prototypes</div>
+      <h2 class="section-title">Built &<br><em>Deployed</em></h2>
+      <p class="section-sub">Two fully functional prototypes built in Lovable — both live and explorable right now.</p>
+    </div>
+    <div class="proto-grid">
+      <a href="https://lenskart-spark-rewards.lovable.app/" target="_blank" class="proto-card reveal delay-1">
+        <div class="proto-preview">
+          <div class="proto-glow"></div>
+          <div class="proto-preview-icon">⭐</div>
+        </div>
+        <div class="proto-body">
+          <div class="proto-type">Prototype · Loyalty System</div>
+          <div class="proto-title">Lenskart Spark Rewards</div>
+          <div class="proto-desc">Complete loyalty & rewards platform — earn points, tier progression (Bronze → Platinum), redeem for discounts, exclusive member benefits, and more.</div>
+          <div class="proto-link">Visit Live Prototype</div>
+        </div>
+      </a>
+      <a href="https://eye-tune-lens.lovable.app/products" target="_blank" class="proto-card reveal delay-2">
+        <div class="proto-preview">
+          <div class="proto-glow" style="animation-delay:2s"></div>
+          <div class="proto-preview-icon">👁️</div>
+        </div>
+        <div class="proto-body">
+          <div class="proto-type">Prototype · Eye Health Profile</div>
+          <div class="proto-title">Eye Health Companion</div>
+          <div class="proto-desc">Personalized eye health profile setup — prescription input (SPH, CYL, Axis, PD), eye concern selection, lifestyle questions, and AI-powered product recommendations.</div>
+          <div class="proto-link">Visit Live Prototype</div>
+        </div>
+      </a>
+    </div>
+    <div style="margin-top:2rem;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem" class="reveal">
+      <div style="text-align:center">
+        <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--teal)">6</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);letter-spacing:0.08em">Key Screens</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--teal)">2</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);letter-spacing:0.08em">Live Apps</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--teal)">5</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);letter-spacing:0.08em">User Journey Phases</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RISKS -->
+<section id="risks">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Risks & Trade-offs</div>
+      <h2 class="section-title">What Could<br><em>Go Wrong</em></h2>
+      <p class="section-sub">Honest risk assessment with mitigations — because good product thinking anticipates failure before it happens.</p>
+    </div>
+    <div class="risks-grid">
+      <div class="risk-card reveal delay-1">
+        <div class="risk-level high">HIGH RISK</div>
+        <div class="risk-title">Adoption Risk</div>
+        <div class="risk-desc">Users may not perceive value in non-transactional engagement — the app is "just eyewear" in their minds.</div>
+        <div class="risk-mitigation"><div class="risk-mit-label">Mitigation</div>Strong onboarding, clear value prop, early rewards that feel immediately worthwhile</div>
+      </div>
+      <div class="risk-card reveal delay-2">
+        <div class="risk-level high">HIGH RISK</div>
+        <div class="risk-title">Habit Formation</div>
+        <div class="risk-desc">Eye care is fundamentally low-frequency — building a daily habit around it fights human nature.</div>
+        <div class="risk-mitigation"><div class="risk-mit-label">Mitigation</div>Gamification, streaks, challenges that make eye care feel like a game, not a chore</div>
+      </div>
+      <div class="risk-card reveal delay-3">
+        <div class="risk-level med">MED RISK</div>
+        <div class="risk-title">Data Privacy</div>
+        <div class="risk-desc">Eye health data is sensitive — users may resist sharing prescription details with a commercial platform.</div>
+        <div class="risk-mitigation"><div class="risk-mit-label">Mitigation</div>Transparent privacy policy, opt-in data collection, clear user control over their data</div>
+      </div>
+      <div class="risk-card reveal delay-4">
+        <div class="risk-level med">MED RISK</div>
+        <div class="risk-title">Competitive Response</div>
+        <div class="risk-desc">Offline opticians have trust advantages that digital features can't easily replicate.</div>
+        <div class="risk-mitigation"><div class="risk-mit-label">Mitigation</div>Leverage digital convenience and personalization as moat — opticians can't match AI recommendations</div>
+      </div>
+      <div class="risk-card reveal delay-5">
+        <div class="risk-level med">MED RISK</div>
+        <div class="risk-title">Engagement Fatigue</div>
+        <div class="risk-desc">Over-notification could cause users to disable alerts or uninstall the app entirely.</div>
+        <div class="risk-mitigation"><div class="risk-mit-label">Mitigation</div>Smart notification timing, user preference controls, ML-based optimal send-time</div>
+      </div>
+      <div class="risk-card reveal delay-1">
+        <div class="risk-level med">TRADE-OFF</div>
+        <div class="risk-title">Complexity vs. Speed</div>
+        <div class="risk-desc">The comprehensive solution takes longer to build — phased rollout risks losing momentum.</div>
+        <div class="risk-mitigation"><div class="risk-mit-label">Decision</div>MVP approach — ship core loops first, validate, then expand based on real user behavior</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner reveal">
+      <div class="section-tag" style="justify-content:center">Let's Connect</div>
+      <h2 class="section-title">Want to Talk<br><em>Product?</em></h2>
+      <p class="section-sub">This case study was built with real research, real data, and a genuine passion for user-centered product design. Always open to discussions on PM, strategy, and eye care.</p>
+      <div class="contact-links">
+        <a href="mailto:kasturi@example.com" class="contact-link">✉ Email Kasturi</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdsGpV4FLP2FNHtwza3Dbek4pTpWweXp1AKHcVn3E5j8n036w/viewform" target="_blank" class="contact-link">📋 View Survey</a>
+        <a href="https://lenskart-spark-rewards.lovable.app/" target="_blank" class="contact-link">🚀 Live App</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Kasturi Gogarkar · PM Portfolio · Cohort-22</span>
+  &nbsp;·&nbsp;
+  <span style="color:var(--teal)">Built for GitHub Pages</span>
+</footer>
+
+<script>
+// ─── CANVAS BACKGROUND ───
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.alpha = Math.random() * 0.5 + 0.1;
+    this.color = Math.random() > 0.7 ? '0,212,170' : '0,180,216';
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(0,212,170,${0.08 * (1 - dist/100)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawConnections();
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ─── NAV SCROLL ───
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ─── INTERSECTION OBSERVER ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Animate bars
+      e.target.querySelectorAll('.bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+// ─── COUNTER ANIMATION ───
+function animateCounter(el, target) {
+  let current = 0;
+  const step = target / 50;
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= target) { el.textContent = target; clearInterval(interval); }
+    else el.textContent = Math.floor(current);
+  }, 30);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('[data-count]').forEach(el => {
+        animateCounter(el, parseInt(el.dataset.count));
+      });
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const heroEl = document.querySelector('#hero .hero-stats');
+if (heroEl) counterObserver.observe(heroEl);
+
+// ─── DECAY CHART ANIMATION ───
+const decayObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const line = document.getElementById('decayLine');
+      const area = document.getElementById('decayArea');
+      if (line) {
+        line.style.transition = 'stroke-dashoffset 2s cubic-bezier(0.16,1,0.3,1)';
+        line.style.strokeDashoffset = '0';
+        setTimeout(() => {
+          area.style.transition = 'opacity 0.8s ease';
+          area.style.opacity = '1';
+          ['d1','d2','d3','d4','l1','l2','l3','l4'].forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (el) setTimeout(() => {
+              el.style.transition = 'opacity 0.3s';
+              el.style.opacity = '1';
+            }, i * 100);
+          });
+        }, 1500);
+      }
+      decayObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const decaySection = document.querySelector('.decay-section');
+if (decaySection) decayObserver.observe(decaySection);
+
+// ─── SMOOTH SCROLL ───
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
